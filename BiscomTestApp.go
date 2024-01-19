@@ -1,6 +1,12 @@
 package main
 
-import "BiscomLibrary"
+import (
+	"BiscomLibrary"	
+	"encoding/json"
+	"fmt"
+)
+
+import 
 
 func main() {
 	faxData := BiscomLibrary.FaxData {
