@@ -1,4 +1,4 @@
-package BiscomLibrary
+package main
 
 import (
 	"encoding/json"

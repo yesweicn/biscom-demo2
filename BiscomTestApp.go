@@ -1,38 +1,50 @@
 package main
 
 import (
-	"BiscomLibrary"	
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
-import 
-
 func main() {
-	faxData := BiscomLibrary.FaxData {
-	  	subject: "Test from Biscom",
-	  	coverPage: "NONE",
-	  	memo: "Test from Me",
-	  	deliveryTime: time.Now(),
-	  	priority: "None",
-	  	recipients: []Recipient{
+	faxData := FaxData{
+	  	Subject: "Test from Biscom",
+	  	CoverPage: "NONE",
+	  	Memo: "Test from Me",
+	  	DeliveryTime: time.Now(),
+	  	Priority: "None",
+	  	Recipients: []Recipient{
 			{
-		  	"faxNumber": "9783136067",
-		  	"deliveryType": "Fax"
-			}
-	  	}
+		  		FaxNumber: "9783136067",
+		  		DeliveryType: "Fax",
+			},
+	  	},
 	}
 
 	apiURL := "https://ws.biscomfax.com/Session"
 	apiURL2 := "https://ws.biscomfax.com/Fax/small"
-	username := "your_username"
-	password := "your_password"
+	username := "cnr_apiuser"
+	password := "Cnr_7806040871"
 
 	// Call OperationA
-	token := BiscomLibrary.Autenticate(apiURL, username, password)
+	token := Authenticate(apiURL, username, password)
 
-	payload := json.Marshal(faxData)
+	if token == "" {
+		fmt.Println("Authentication failed")
+		return
+	}
 
-	// Call OperationB
-	Biscomlibrary.SendFax(apiURL, token, payload)
+	payload, err := json.Marshal(faxData)
+	if err != nil {
+		fmt.Println("Error: error occurred marshalling!")
+		return
+	}
+
+	// Call SendFax
+	err2 := SendFax(apiURL2, token, payload)
+
+	if err2 != nil {
+		fmt.Println("Error: error occurred sending fax!")
+		return
+	}	
 }

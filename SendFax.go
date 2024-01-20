@@ -1,7 +1,6 @@
-package BiscomLibrary
+package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"bytes"
@@ -32,12 +31,12 @@ type FaxData struct {
 	Recipients   []Recipient  `json:"recipients"`
 }
 
-func SendFax(apiURL, token, payload string) error {
+func SendFax(apiURL string, token string, payload []byte) error {
 	// Create a new HTTP client
 	client := &http.Client{}
 
 	// Create a new request (example assumes a POST request)
-	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(payload))
 	if err != nil {
 		fmt.Println("Error creating request:", err)
 		return err
@@ -59,7 +58,7 @@ func SendFax(apiURL, token, payload string) error {
 	// Check if the response status code is successful (2xx)
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		fmt.Println("Error: Non-successful status code received:", resp.Status)
-		return fmt.Errorf("Error: %s", resp.Status);
+		return fmt.Errorf("error: %s", resp.Status);
 	}
 
 	// Handle the response as needed
