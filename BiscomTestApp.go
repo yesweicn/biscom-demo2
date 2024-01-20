@@ -122,7 +122,8 @@ func Authenticate(apiURL, username, password string) string {
 
 	// Decode the JSON response
 	var sessionResponse SessionResponse
-	err = json.NewDecoder(resp.Body).Decode(&sessionResponse)
+	//cannot user resp.Body, that stream can only be read once
+	err = json.NewDecoder(body).Decode(&sessionResponse)
 	if err != nil {
 		fmt.Println("Error decoding JSON:", err)
 		return ""
