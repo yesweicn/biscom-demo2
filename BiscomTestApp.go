@@ -5,7 +5,10 @@ import (
 	"bytes"
 	"time"
 	"encoding/json"	
+	"encoding/base64"	
 	"net/http"
+	"io/ioutil"
+	"log"
 )
 
 // SessionResponse represents the structure of the JSON response from the /baseUrl/Session endpoint
@@ -129,8 +132,7 @@ func Authenticate(apiURL, username, password string) string {
 		return ""
 	}
 
-	// Now you can use the data retrieved from the API
-	fmt.Printf("%+v\n", sessionResponse)
+	//fmt.Printf("%+v\n", sessionResponse)
 	return sessionResponse.TokenInfo.Token
 }
 
@@ -170,15 +172,33 @@ func SendFax(apiURL string, token string, payload []byte) error {
 }
 
 func main() {
+	pdfFilePath := "LRT_Map.pdf"
+	// Read the entire file into a byte slice
+	pdfBytes, err := ioutil.ReadFile(pdfFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Encode the byte slice to Base64
+	encodedString := base64.StdEncoding.EncodeToString(pdfBytes)
+
+	//Check the Base64 encoding
+	fmt.Println(encodedString) 
+
 	faxData := FaxData{
-	  	Subject: "Test from Biscom",
+	  	Subject: "Test from WEI",
 	  	CoverPage: "NONE",
-	  	Memo: "Test from Me",
+	  	Memo: "Test from Golang App",
 	  	DeliveryTime: time.Now(),
 	  	Priority: "None",
+		Attachments: []Attachment{
+			{	
+				Name:	"Sample.pdf",
+				Content: encodedString,
+			},
+		},
 	  	Recipients: []Recipient{
 			{
-		  		FaxNumber: "9783136067",
+		  		FaxNumber: "9783138268",
 		  		DeliveryType: "Fax",
 			},
 	  	},
@@ -186,8 +206,8 @@ func main() {
 
 	apiURL := "https://ws.biscomfax.com/Session"
 	apiURL2 := "https://ws.biscomfax.com/Fax/small"
-	username := "cnr_apiuser"
-	password := "Cnr_7806040871"
+	username := "cnr_apiuser2"
+	password := "Gendarmerie@"
 
 	// Call OperationA
 	token := Authenticate(apiURL, username, password)
