@@ -190,26 +190,21 @@ func main() {
 	  	Memo: "Test from Golang App",
 	  	DeliveryTime: time.Now(),
 	  	Priority: "None",
-		Attachments: []Attachment{
-			{	
-				Name:	"Sample.pdf",
-				Content: encodedString,
-			},
-		},
-	  	Recipients: []Recipient{
-			{
-		  		FaxNumber: "9783138268",
-		  		DeliveryType: "Fax",
-			},
-	  	},
 	}
+
+	//Dynamically adding Recipient(s) and Attachment(s)
+	attachment1 := Attachment{Name: "Sample.pdf", Content: encodedString}
+	recipient1 := Recipient{FaxNumber: "9783138268", DeliveryType: "Fax"}
+	
+	faxData.Attachments = append(faxData.Attachments, attachment1)
+	faxData.Recipients = append(faxData.Recipients, recipient1)	
 
 	apiURL := "https://ws.biscomfax.com/Session"
 	apiURL2 := "https://ws.biscomfax.com/Fax/small"
 	username := "cnr_apiuser2"
 	password := "Gendarmerie@"
 
-	// Call OperationA
+	// Get Session Token
 	token := Authenticate(apiURL, username, password)
 
 	if token == "" {
